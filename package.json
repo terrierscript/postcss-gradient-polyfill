@@ -1,0 +1,24 @@
+{
+  "name": "postcss-regacy-background",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "mocha": "^2.2.5"
+  },
+  "dependencies": {
+    "css": "^2.2.0",
+    "gradient-parser": "^0.1.5",
+    "postcss": "^4.1.11"
+  }
+}
