@@ -1,6 +1,7 @@
 var postcss = require('postcss');
 var gradient = require("gradient-parser")
 var Color = require("color")
+
 module.exports = postcss.plugin('postcss-gradient-failover', function () {
   return function (css) {
     css.eachDecl('background', function (decl) {
@@ -13,6 +14,7 @@ module.exports = postcss.plugin('postcss-gradient-failover', function () {
     });
   };
 });
+
 function parseGradientColors(value){
   var colors = gradient.parse(value)[0].colorStops
   return colors.map(function(ast){
