@@ -4,7 +4,7 @@ var Color = require("color")
 
 module.exports = postcss.plugin('postcss-gradient-failover', function () {
   return function (css) {
-    css.eachDecl('background', function (decl) {
+    css.walkDecls('background', function (decl) {
       var colors = parseGradientColors(decl.value)
       var mixedColor = generatePolyfillColor(colors)
       decl.cloneBefore({
