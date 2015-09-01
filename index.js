@@ -2,21 +2,16 @@ var postcss = require('postcss');
 var gradient = require("gradient-parser")
 var Color = require("color")
 
-module.exports = postcss.plugin('postcss-gradient-failover', function () {
-  return function (css) {
-    css.walkDecls('background', function (decl) {
-      var colors = parseGradientColors(decl.value)
-      var mixedColor = generatePolyfillColor(colors)
-      decl.cloneBefore({
-        prop: 'background',
-        value: mixedColor
-      })
-    });
-  };
-});
+var parseGradientColors = function(value){
+  try{
+    var colors = gradient.parse(value)[0].colorStops
+    return colors
+  }catch(e){}
+  return []
+}
 
-function parseGradientColors(value){
-  var colors = gradient.parse(value)[0].colorStops
+// convert to `Color` object
+var convertToColors = function (colors){
   return colors.map(function(ast){
     try{
       if(ast.type === "hex"){
@@ -31,6 +26,39 @@ function parseGradientColors(value){
   })
 }
 
-function generatePolyfillColor(colors){
-  return colors[0].mix(colors[1]).hexString()
+var mixColor = function(color1, color2){
+  if(!color1 || !color2){
+    return undefined
+  }
+  return color1.mix(color2).hexString()
 }
+
+var polyfillDecl = function(decl){
+  var colors = convertToColors(parseGradientColors(decl.value))
+  var mixedColor = mixColor(colors[0], colors[1])
+  if(!mixedColor){
+    return
+  }
+  decl.cloneBefore({
+    prop: 'background',
+    value: mixedColor
+  })
+}
+
+var hasColor = function(decl){
+  
+}
+
+module.exports = postcss.plugin('postcss-gradient-polyfill', function () {
+  return function (css) {
+    css.walkRules(function (rule) {
+      var defaultBackground = undefined
+      rule.walkDecls('background', function (decl) {
+        if(defaultBackground){
+          return
+        }
+        polyfillDecl(decl)
+      });
+    });
+  };
+});

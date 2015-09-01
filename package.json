@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "autoprefixer": "^5.2.0",
     "chai": "^3.0.0",
     "mocha": "^2.2.5"
   },
