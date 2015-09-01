@@ -1,5 +1,6 @@
-var postcss = require('postcss');
+var postcss = require("postcss");
 var gradient = require("gradient-parser")
+var parseColor = require("parse-color")
 var Color = require("color")
 
 var parseGradientColors = function(value){
@@ -45,8 +46,9 @@ var polyfillDecl = function(decl){
   })
 }
 
-var hasColor = function(decl){
-  
+var getColor = function(decl){
+  var color = parseColor(decl.value)
+  return color.hex 
 }
 
 module.exports = postcss.plugin('postcss-gradient-polyfill', function () {
@@ -54,6 +56,11 @@ module.exports = postcss.plugin('postcss-gradient-polyfill', function () {
     css.walkRules(function (rule) {
       var defaultBackground = undefined
       rule.walkDecls('background', function (decl) {
+        var color = getColor(decl)
+        if(color){
+          defaultBackground = color
+          return
+        }
         if(defaultBackground){
           return
         }

@@ -20,7 +20,7 @@ describe('postcss-color', function () {
     it('not overwrite when exists polyfill', function () {
       test(
         'a{ background: #cccccc; background: linear-gradient(#000, #fff);}',
-        'a{ background: #808080; background: linear-gradient(#000, #fff);}'
+        'a{ background: #cccccc; background: linear-gradient(#000, #fff);}'
       );
     })
   })
