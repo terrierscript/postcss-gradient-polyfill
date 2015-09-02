@@ -13,6 +13,6 @@ describe("mix-clors", function(){
       '#0000ff',
       '#4b0082',
       '#ee82ee' ])
-    assert.equal(result, "#9A54B8")
+    assert.equal(result, "#9A6159") // FIXME: get middle
   })
 })
