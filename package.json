@@ -18,10 +18,10 @@
     "mocha": "^2.2.5"
   },
   "dependencies": {
-    "color": "^0.8.0",
     "css": "^2.2.0",
     "d3": "^3.5.5",
     "gradient-parser": "^0.1.5",
+    "mix-colors": "0.0.1",
     "parse-color": "^1.0.0",
     "postcss": "^4.0.0"
   }
