@@ -1,24 +1,18 @@
 var parseColor = require("parse-color")
 var gradient = require("gradient-parser")
 
-var parseGradient = function(value, result){
-  try{
-    return gradient.parse(value)
-  }catch(e){
-    if(typeof result === "object" && typeof result.warn === "function"){
-      result.warn("Invalit gradient:" + e)
-    }
-  }
-  return
+var parseGradient = function(value){
+  return gradient.parse(value)
 }
 
-var getStepColors = function(ast){
+var getGradientColors = function(ast){
   var colorStops = ast.map(function(ast){
     return ast.colorStops
   })
 
   // flatten
   colorStops = Array.prototype.concat.apply([], colorStops)
+
   return colorStops.map(function(step){
     if(step.type === 'hex'){
       return getHexColor("#" + step.value)
@@ -34,14 +28,12 @@ var getHexColor = function(value){
 }
 
 
-module.exports = function(value, postCssResult){
+module.exports = function(value){
   var color = getHexColor(value)
   if(color !== undefined){
     return [color]
   }
-  var ast = parseGradient(value, postCssResult)
-  if(!ast){
-    return []
-  }
-  return getStepColors(ast)
+  var ast = parseGradient(value)
+  var colors = getGradientColors(ast)
+  return colors
 }

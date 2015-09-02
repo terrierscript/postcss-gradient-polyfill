@@ -1,43 +1,23 @@
-var postcss = require("postcss");
+var postcss = require("postcss")
 var Color = require("color")
+var parseColor = require("./colors")
 
-var parseGradientColors = function(value){
-  try{
-    var colors = gradient.parse(value)[0].colorStops
-    return colors
-  }catch(e){}
-  return []
-}
-
-// convert to `Color` object
-var convertToColors = function (colors){
-  return colors.map(function(ast){
-    try{
-      if(ast.type === "hex"){
-        return Color("#" + ast.value);
-      }
-    }catch(e){
-      return null
+var mixColors = function(colors){
+  return colors.reduce(function(mixed, clr){
+    if(mixed === null){
+      return Color(clr)
     }
-  }).filter(function(c){ // comapct
-    return c
-  })
+    return mixed.mix(Color(clr))
+  }, null).hexString()
 }
 
-var mixColor = function(color1, color2){
-  if(!color1 || !color2){
-    return undefined
+var safeParseColor = function(decl, result){
+  try{
+    return parseColor(decl.value)
+  }catch(e){
+    result.warn("Invalid parse color: " + e)
   }
-  return color1.mix(color2).hexString()
-}
-
-var getMixedColor = function(decl){
-  var colors = convertToColors(parseGradientColors(decl.value))
-  var mixedColor = mixColor(colors[0], colors[1])
-  if(!mixedColor){
-    return
-  }
-  return mixedColor
+  return []
 }
 
 module.exports = postcss.plugin('postcss-gradient-polyfill', function () {
@@ -45,15 +25,16 @@ module.exports = postcss.plugin('postcss-gradient-polyfill', function () {
     css.eachRule(function (rule) {
       var defaultBackground = undefined
       rule.eachDecl('background', function (decl) {
-        var color = getColor(decl)
-        if(color){
-          defaultBackground = color
+        if(defaultBackground){ // avoid duplicate
           return
         }
-        if(defaultBackground){
+        var colors = safeParseColor(decl, result)
+
+        if(colors.length === 1){
+          defaultBackground = colors[0]
           return
         }
-        var mixedColor = getMixedColor(decl)
+        var mixedColor = mixColors(colors)
         decl.cloneBefore({
           prop: 'background',
           value: mixedColor
