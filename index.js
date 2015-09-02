@@ -50,9 +50,9 @@ var getColor = function(decl){
 
 module.exports = postcss.plugin('postcss-gradient-polyfill', function () {
   return function (css) {
-    css.walkRules(function (rule) {
+    css.eachRule(function (rule) {
       var defaultBackground = undefined
-      rule.walkDecls('background', function (decl) {
+      rule.eachDecl('background', function (decl) {
         var color = getColor(decl)
         if(color){
           defaultBackground = color
