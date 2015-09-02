@@ -23,6 +23,7 @@ describe('postcss-color', function () {
         'a{ background: #cccccc; background: linear-gradient(#000, #fff);}'
       );
     })
+
   })
   describe('with autoprefixer', function(){
     it('[plugin , autoprefixer]', function(){

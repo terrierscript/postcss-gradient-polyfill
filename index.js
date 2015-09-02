@@ -1,15 +1,6 @@
 var postcss = require("postcss")
-var Color = require("color")
 var parseColor = require("./colors")
-
-var mixColors = function(colors){
-  return colors.reduce(function(mixed, clr){
-    if(mixed === null){
-      return Color(clr)
-    }
-    return mixed.mix(Color(clr))
-  }, null).hexString()
-}
+var mixColors = require("./mix-colors")
 
 var safeParseColor = function(decl, result){
   try{
