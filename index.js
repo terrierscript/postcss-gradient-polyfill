@@ -34,16 +34,13 @@ var mixColor = function(color1, color2){
   return color1.mix(color2).hexString()
 }
 
-var polyfillDecl = function(decl){
+var getMixedColor = function(decl){
   var colors = convertToColors(parseGradientColors(decl.value))
   var mixedColor = mixColor(colors[0], colors[1])
   if(!mixedColor){
     return
   }
-  decl.cloneBefore({
-    prop: 'background',
-    value: mixedColor
-  })
+  return mixedColor
 }
 
 var getColor = function(decl){
@@ -64,7 +61,12 @@ module.exports = postcss.plugin('postcss-gradient-polyfill', function () {
         if(defaultBackground){
           return
         }
-        polyfillDecl(decl)
+        var mixedColor = getMixedColor(decl)
+        decl.cloneBefore({
+          prop: 'background',
+          value: mixedColor
+        })
+        defaultBackground = mixedColor
       });
     });
   };
