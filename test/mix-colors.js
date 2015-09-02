@@ -5,6 +5,12 @@ describe("mix-clors", function(){
     var result = mixColors(["#000000", "#ffffff"])
     assert.equal(result, "#808080")
   })
+  it("mix 3 color", function(){
+    var result = mixColors( [ '#ff0000',
+      '#00ff00',
+      '#0000ff' ])
+    assert.equal(result, "#555555") // FIXME: get middle
+  })
   it("mix rainbow", function(){
     var result = mixColors( [ '#ff0000',
       '#ffa500',
